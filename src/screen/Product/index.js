@@ -2,15 +2,30 @@
 import { useEffect } from "react";
 import { getProducts } from "./api";
 import React from "react";
-import { Box, FlatList } from "native-base";
+import {
+  Box,
+  Button,
+  Center,
+  FlatList,
+  HStack,
+  IconButton,
+  Stagger,
+  useDisclose,
+} from "native-base";
 import ProductCard from "./ProductCard";
+import { useIsFocused } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function Product({ navigation }) {
+  const { isOpen, onToggle } = useDisclose();
+  const isFocused = useIsFocused();
   const [data, setData] = React.useState({});
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    if (isFocused) {
+      fetchProducts();
+    }
+  }, [isFocused]);
 
   const fetchProducts = async () => {
     const resp = await getProducts();
@@ -19,6 +34,11 @@ export default function Product({ navigation }) {
 
   return (
     <Box width="100%">
+      <Box position={"absolute"} zIndex={10} bottom={5} right={5}>
+        <Button onPress={() => navigation.navigate("NewProduct")}>
+          Tambah Produk
+        </Button>
+      </Box>
       <FlatList
         data={data}
         renderItem={({ item }) => (

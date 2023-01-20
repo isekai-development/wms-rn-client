@@ -3,7 +3,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import Home from "../screen/Home";
 import Product from "../screen/Product";
-import Setting from "../screen/Setting";
+import Logout from "../screen/Logout";
 import Supplier from "../screen/Supplier";
 
 const Tab = createBottomTabNavigator();
@@ -19,8 +19,8 @@ export default function BottomNavigator() {
             iconName = focused ? "home" : "home-outline";
           if (route.name === "Products")
             iconName = focused ? "cube" : "cube-outline";
-          if (route.name === "Settings")
-            iconName = focused ? "settings" : "settings-outline";
+          if (route.name === "Logout")
+            iconName = focused ? "log-out-outline" : "log-out-outline";
           if (route.name === "Suppliers")
             iconName = focused ? "people" : "people-outline";
 
@@ -33,7 +33,7 @@ export default function BottomNavigator() {
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Products" component={Product} />
       <Tab.Screen name="Suppliers" component={Supplier} />
-      <Tab.Screen name="Settings" component={Setting} />
+      <Tab.Screen name="Logout" component={Logout} />
     </Tab.Navigator>
   );
 }

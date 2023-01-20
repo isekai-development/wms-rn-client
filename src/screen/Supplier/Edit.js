@@ -1,5 +1,4 @@
 import React from "react";
-import { editProduct } from "./api";
 import {
   Box,
   Button,
@@ -8,25 +7,24 @@ import {
   ScrollView,
   VStack,
 } from "native-base";
+import { editSupplier } from "./api";
 
-export default function EditProduct({ route, navigation }) {
+export default function EditSupplier({ route, navigation }) {
   const [formData, setData] = React.useState({
-    name: route.params.product.name,
-    quantity: route.params.product.quantity,
-    unit: route.params.product.unit,
-    minimumQuantity: route.params.product.minimumQuantity || 0,
+    name: route.params.supplier.name,
+    phone_number: route.params.supplier.phone_number,
+    address: route.params.supplier.address,
   });
 
   const onSubmit = async () => {
     const payload = {
       name: formData.name,
-      quantity: Number(formData.quantity),
-      unit: formData.unit,
-      minimumQuantity: Number(formData.minimumQuantity),
+      phone_number: formData.phone_number,
+      address: formData.address,
     };
 
-    const resp = await editProduct(route.params.product._id, { ...payload });
-    navigation.navigate("Products");
+    const resp = await editSupplier(route.params.supplier._id, { ...payload });
+    navigation.navigate("Suppliers");
   };
 
   return (
@@ -53,13 +51,13 @@ export default function EditProduct({ route, navigation }) {
                 bold: true,
               }}
             >
-              Quantity
+              Nomor Hp
             </FormControl.Label>
             <Input
               placeholder="quantity"
-              value={String(formData.quantity)}
+              value={String(formData.phone_number)}
               onChangeText={(value) =>
-                setData({ ...formData, quantity: value })
+                setData({ ...formData, phone_number: value })
               }
             />
           </FormControl>
@@ -69,28 +67,12 @@ export default function EditProduct({ route, navigation }) {
                 bold: true,
               }}
             >
-              Unit
+              Alamat
             </FormControl.Label>
             <Input
               placeholder="unit"
-              value={String(formData.unit)}
-              onChangeText={(value) => setData({ ...formData, unit: value })}
-            />
-          </FormControl>
-          <FormControl isRequired my={2}>
-            <FormControl.Label
-              _text={{
-                bold: true,
-              }}
-            >
-              Minimum Quantity
-            </FormControl.Label>
-            <Input
-              placeholder="minimumQuantity"
-              value={String(formData.minimumQuantity)}
-              onChangeText={(value) =>
-                setData({ ...formData, minimumQuantity: value })
-              }
+              value={formData.address}
+              onChangeText={(value) => setData({ ...formData, address: value })}
             />
           </FormControl>
           <Button mt={3} onPress={onSubmit}>

@@ -23,11 +23,33 @@ export function deleteProducts(id) {
     });
 }
 
-export function takeOutProduct(id, quantity) {
+export function editProduct(id, payload) {
   return axios
     .put(appConfig.extra.apiUrl + "/product/update?productId=" + id, {
-      newData: { quantity },
+      newData: { ...payload },
     })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+}
+
+export function getSupplier() {
+  return axios
+    .get(appConfig.extra.apiUrl + "/supplier/list")
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+}
+
+export function createProduct(payload) {
+  return axios
+    .post(appConfig.extra.apiUrl + "/product/create", { ...payload })
     .then((res) => {
       return res.data;
     })

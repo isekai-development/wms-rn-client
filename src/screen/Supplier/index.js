@@ -10,22 +10,37 @@ import {
   VStack,
   Text,
   Spacer,
+  Button,
 } from "native-base";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useIsFocused } from "@react-navigation/native";
 
-export default function Supplier() {
+export default function Supplier({ navigation }) {
+  const isFocused = useIsFocused();
   const [data, setData] = React.useState({});
 
   useEffect(() => {
-    fetchSupplier();
-  }, []);
+    if (isFocused) {
+      fetchSupplier();
+    }
+  }, [isFocused]);
 
   const fetchSupplier = async () => {
     const resp = await getSupplier();
     setData(resp);
   };
 
+  const onEdit = (item) => {
+    navigation.navigate("EditSupplier", { supplier: item });
+  };
+
   return (
     <Box width="100%">
+      <Box position={"absolute"} zIndex={10} bottom={5} right={5}>
+        <Button onPress={() => navigation.navigate("NewSupplier")}>
+          Tambah Supplier
+        </Button>
+      </Box>
       <FlatList
         data={data}
         renderItem={({ item, key }) => (
@@ -70,16 +85,13 @@ export default function Supplier() {
                 </Text>
               </VStack>
               <Spacer />
-              <Text
-                fontSize="xs"
-                _dark={{
-                  color: "warmGray.50",
-                }}
-                color="coolGray.800"
-                alignSelf="flex-start"
+              <Button
+                variant={"ghost"}
+                rounded="full"
+                onPress={() => onEdit(item)}
               >
-                {item.username}
-              </Text>
+                <Ionicons name="create-outline" size={20} color="tomato" />
+              </Button>
             </HStack>
           </Box>
         )}

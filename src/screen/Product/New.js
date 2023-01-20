@@ -1,21 +1,35 @@
-import React from "react";
-import { editProduct } from "./api";
+import React, { useEffect, useState } from "react";
+import { createProduct, getSupplier } from "./api";
 import {
   Box,
   Button,
+  CheckIcon,
   FormControl,
   Input,
   ScrollView,
+  Select,
+  Text,
   VStack,
 } from "native-base";
 
-export default function EditProduct({ route, navigation }) {
+export default function NewProduct({ navigation }) {
+  const [suppliers, setSuppliers] = useState([]);
   const [formData, setData] = React.useState({
-    name: route.params.product.name,
-    quantity: route.params.product.quantity,
-    unit: route.params.product.unit,
-    minimumQuantity: route.params.product.minimumQuantity || 0,
+    name: "",
+    quantity: "",
+    unit: "",
+    minimumQuantity: "",
+    supplierId: "",
   });
+
+  useEffect(() => {
+    fetchSupplier();
+  }, []);
+
+  const fetchSupplier = async () => {
+    const resp = await getSupplier();
+    setSuppliers(resp);
+  };
 
   const onSubmit = async () => {
     const payload = {
@@ -23,9 +37,10 @@ export default function EditProduct({ route, navigation }) {
       quantity: Number(formData.quantity),
       unit: formData.unit,
       minimumQuantity: Number(formData.minimumQuantity),
+      supplierId: formData.supplierId,
     };
 
-    const resp = await editProduct(route.params.product._id, { ...payload });
+    const resp = await createProduct(payload);
     navigation.navigate("Products");
   };
 
@@ -92,6 +107,42 @@ export default function EditProduct({ route, navigation }) {
                 setData({ ...formData, minimumQuantity: value })
               }
             />
+          </FormControl>
+
+          <FormControl isRequired my={2}>
+            <FormControl.Label
+              _text={{
+                bold: true,
+              }}
+            >
+              Pilih Supplier
+            </FormControl.Label>
+            <Select
+              selectedValue={formData.supplierId}
+              minWidth="200"
+              accessibilityLabel="Pilih Supplier"
+              placeholder="Pilih Supplier"
+              _selectedItem={{
+                bg: "teal.600",
+                endIcon: <CheckIcon size="5" />,
+              }}
+              mt={1}
+              onValueChange={(itemValue) =>
+                setData({ ...formData, supplierId: itemValue })
+              }
+            >
+              {suppliers.length ? (
+                suppliers.map((item) => (
+                  <Select.Item
+                    label={item.name}
+                    value={item._id}
+                    key={item._key}
+                  />
+                ))
+              ) : (
+                <Text></Text>
+              )}
+            </Select>
           </FormControl>
           <Button mt={3} onPress={onSubmit}>
             Submit

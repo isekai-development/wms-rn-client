@@ -10,9 +10,9 @@ import {
   Text,
   VStack,
 } from "native-base";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { deleteProducts, takeOutProduct } from "./api";
+import { deleteProducts, editProduct } from "./api";
 
 export default function ProductCard({ item, fetchProducts, navigation }) {
   const [show, setShow] = useState(false);
@@ -20,8 +20,18 @@ export default function ProductCard({ item, fetchProducts, navigation }) {
   const [showModalTakeOut, setShowModalTakeOut] = useState(false);
   const [takeOutError, seTakeOutError] = useState(false);
   const [takeOutNumber, setTakeOutNumber] = useState(0);
-
   const [isOpen, setIsOpen] = React.useState(false);
+
+  useEffect(() => {
+    closeAllModal();
+  }, []);
+
+  const closeAllModal = () => {
+    setShow(false);
+    setShowModal(false);
+    setShowModalTakeOut(false);
+    setIsOpen(false);
+  };
 
   const onClose = () => setIsOpen(false);
 
@@ -39,20 +49,16 @@ export default function ProductCard({ item, fetchProducts, navigation }) {
   };
 
   const submitTakeOut = async (id, quantity) => {
-    const resp = await takeOutProduct(id, quantity - takeOutNumber);
+    const resp = await editProduct(id, { quantity: quantity - takeOutNumber });
     setTakeOutNumber(0);
     fetchProducts();
-    setShowModal(false);
-    setShowModalTakeOut(false);
-    setShow(false);
+    closeAllModal();
   };
 
   const onDelete = async (id) => {
     await deleteProducts(id);
     fetchProducts();
-    setIsOpen(false);
-    setShowModal(false);
-    setShow(false);
+    closeAllModal();
   };
   return (
     <Box py="3" px={"3"} mx={3} my={3} shadow={3} bg={"white"} rounded="lg">
@@ -95,9 +101,10 @@ export default function ProductCard({ item, fetchProducts, navigation }) {
               </Button>
               <Button
                 colorScheme={"orange"}
-                onPress={() =>
-                  navigation.navigate("EditProduct", { product: item })
-                }
+                onPress={() => {
+                  setShowModal(false);
+                  navigation.navigate("EditProduct", { product: item });
+                }}
               >
                 Edit
               </Button>

@@ -5,6 +5,9 @@ import BottomNavigator from "./BottomNavigator";
 import Login from "../screen/Login";
 import { useSelector } from "react-redux";
 import EditProduct from "../screen/Product/Edit";
+import EditSupplier from "../screen/Supplier/Edit";
+import NewProduct from "../screen/Product/New";
+import NewSupplier from "../screen/Supplier/New";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +25,9 @@ export default function Navigator() {
               options={{ headerShown: false }}
             />
             <Stack.Screen name="EditProduct" component={EditProduct} />
+            <Stack.Screen name="EditSupplier" component={EditSupplier} />
+            <Stack.Screen name="NewProduct" component={NewProduct} />
+            <Stack.Screen name="NewSupplier" component={NewSupplier} />
           </>
         ) : (
           <>
